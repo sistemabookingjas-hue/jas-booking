@@ -1,13 +1,47 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JAS Booking</title>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JAS Workspace | Reservas Colombia</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8;color:#172033}.wrap{max-width:1180px;margin:0 auto;padding:16px}.head{background:#082d63;color:#fff;padding:20px 24px;border-radius:9px;display:flex;justify-content:space-between}.logo{font-size:34px;font-weight:900;font-style:italic}.tag{font-size:11px;font-weight:700;letter-spacing:1px;margin-left:12px}.head h1{font-size:23px;margin:10px 0 3px}.small{font-size:11px}.status{background:#14b86e;border-radius:20px;padding:5px 10px;font-size:10px}.panel{background:#fff;border:1px solid #d7dde7;border-radius:8px;margin-top:10px;padding:11px}.filters{background:#eef1f5;border-radius:8px;padding:12px;margin-top:10px;display:grid;grid-template-columns:1fr 170px 82px;gap:10px;align-items:end}label{display:block;font-size:10px;font-weight:700;margin-bottom:5px}input,select,button{height:34px;border:1px solid #aeb8c8;border-radius:5px;padding:0 10px;width:100%;background:#fff}.primary{background:#082d63;color:#fff;border:0;font-weight:700}.verify{grid-column:1/-1;color:#082d63;font-size:11px;background:#fff}.stats{display:flex;gap:42px;margin:17px 0}.num{font-size:20px;font-weight:800}.free{color:#00a66b}.reserved{color:#e3394c}.blue{color:#005bc4}.legend{margin-left:auto;font-size:10px;align-self:center}.plan-title{font-size:12px;color:#082d63}.plan{position:relative;background:#fff;border:1px solid #ccd5e2;border-radius:8px;padding:8px;overflow:auto}.plan img{display:block;width:100%;min-width:760px;height:auto}.hint{font-size:10px;color:#8090a8;margin:8px 2px}.footer{font-size:10px;color:#69778e;margin:16px 0}.login{position:fixed;inset:0;background:#eef1f5;z-index:10;display:grid;place-items:center;padding:20px}.login-card{width:min(850px,100%);display:grid;grid-template-columns:1fr 1fr;background:white;border-radius:12px;overflow:hidden;box-shadow:0 18px 50px #0002}.login-left{background:#082d63;color:#fff;padding:55px 40px}.login-right{padding:55px 40px;display:flex;flex-direction:column;justify-content:center}.ms{width:auto;background:#082d63;color:white;border:0;margin-top:20px;font-weight:700}.hidden{display:none}@media(max-width:700px){.filters{grid-template-columns:1fr}.verify{grid-column:auto}.stats{gap:18px;flex-wrap:wrap}.legend{margin-left:0}.login-card{grid-template-columns:1fr}.login-left{display:none}}
-</style></head><body>
-<div id="login" class="login"><div class="login-card"><div class="login-left"><div><span class="logo">JAS</span><span class="tag">PEOPLE MAKE THE DIFFERENCE</span></div><h1>Reserva de puestos y salas</h1><p>JAS Colombia · Sistema de reservas de espacios de trabajo.</p></div><div class="login-right"><h2>Bienvenido</h2><p>Ingresa con tu cuenta corporativa para consultar disponibilidad y realizar reservas.</p><button class="ms" onclick="enter()">▦ &nbsp; Continuar con Microsoft</button><p class="hint">Modo demostración. Microsoft Entra ID se conectará en la versión productiva.</p></div></div></div>
-<div class="wrap"><header class="head"><div><div><span class="logo">JAS</span><span class="tag">PEOPLE MAKE THE DIFFERENCE</span></div><h1>Reserva de puestos y salas</h1><div class="small">JAS Colombia · Bogotá 101 · 76 puestos de trabajo y 2 salas de juntas</div></div><div style="text-align:right"><span class="status">Conectado</span><div class="small" style="margin-top:9px;font-weight:bold">Luis Olaya</div><button onclick="logout()" style="width:auto;height:27px;margin-top:7px;background:transparent;color:white;border-color:#fff8;font-size:10px">Cerrar sesión</button></div></header>
-<div class="panel"><label style="display:inline;margin-right:12px;color:#082d63">Oficina:</label><select style="width:180px"><option>Bogotá 101</option><option>Medellín</option><option>Aeropuerto</option></select></div>
-<div class="filters"><div><label>Buscar persona o puesto</label><input placeholder="Ej: Luis, 45, Milán"></div><div><label>Fecha</label><input id="date" type="date"></div><button class="primary">Buscar</button><button class="verify">↻ Verificar disponibilidad</button></div>
-<div class="stats"><div><div class="num free">73</div><div class="small">Puestos libres</div></div><div><div class="num reserved">3</div><div class="small">Puestos reservados</div></div><div><div class="num blue">2</div><div class="small">Salas libres</div></div><div class="legend">□ Libre &nbsp;&nbsp; ▫ Reservado &nbsp;&nbsp; ■ No disponible</div></div>
-<div class="plan-title">Plano de la oficina</div><div class="plan"><img src="floorplan-bogota.jpg" alt="Plano Bogotá 101"></div><div class="hint">Plano real de Bogotá 101. En la siguiente fase activaremos cada puesto, Phonebook y sala directamente sobre el plano.</div>
-<div class="plan-title" style="margin-top:16px">Reservas del día</div><p class="small">No hay reservas para esta fecha.</p><div class="footer">Última actualización: hace unos segundos · Se actualizará automáticamente cuando conectemos la base de datos.</div></div>
-<script>function enter(){document.getElementById('login').classList.add('hidden')}function logout(){document.getElementById('login').classList.remove('hidden')}const d=new Date();document.getElementById('date').value=d.toISOString().slice(0,10)</script></body></html>
+:root{--nav:#082b59;--blue:#174f90;--bg:#edf2f7;--white:#fff;--line:#d7e0eb;--text:#172033}
+*{box-sizing:border-box}html,body{height:100%;margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);background:var(--bg)}
+body{display:grid;grid-template-rows:auto 1fr}.shell{background:var(--nav);color:#fff;padding:14px 18px;box-shadow:0 3px 14px #0002;z-index:2}
+.top{max-width:1320px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.mark{font-size:1.55rem;font-weight:800;letter-spacing:.04em}.brand small{display:block;color:#b9c9df}.tabs{display:flex;gap:7px;flex-wrap:wrap}.tab{border:1px solid #ffffff55;background:#ffffff12;color:#fff;padding:9px 14px;border-radius:9px;font-weight:700;cursor:pointer}.tab:hover,.tab.active{background:#fff;color:var(--nav)}
+.notice{max-width:1320px;margin:10px auto 0;background:#fff2c7;color:#694c00;border-radius:8px;padding:8px 11px;font-size:.82rem}.stage{min-height:0;padding:12px}iframe{display:block;width:100%;height:100%;min-height:760px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 25px #0b2d5b12}
+@media(max-width:650px){.shell{padding:12px}.top{align-items:flex-start}.tabs{width:100%}.tab{flex:1;padding:9px 7px}.stage{padding:6px}iframe{border-radius:9px;min-height:700px}}
+</style>
+</head>
+<body>
+<header class="shell">
+  <div class="top">
+    <div class="brand"><div class="mark">JAS</div><div><strong>Workspace Colombia</strong><small>Reserva de puestos, salas y Phonebooks</small></div></div>
+    <nav class="tabs" aria-label="Seleccionar oficina">
+      <button class="tab active" data-office="bogota" type="button">Bogotá 101</button>
+      <button class="tab" data-office="medellin" type="button">Medellín</button>
+      <button class="tab" data-office="aeropuerto" type="button">Aeropuerto</button>
+    </nav>
+  </div>
+  <div class="notice"><strong>Versión unificada de demostración:</strong> las reservas se guardan en este navegador. La conexión definitiva a usuarios y base de datos se realizará con Supabase.</div>
+</header>
+<main class="stage"><iframe id="app" title="Sistema de reservas JAS" src="oficinas/bogota.html"></iframe></main>
+<script>
+(function(){
+ const routes={bogota:'oficinas/bogota.html',medellin:'oficinas/medellin.html',aeropuerto:'oficinas/aeropuerto.html'};
+ const frame=document.getElementById('app');
+ const tabs=[...document.querySelectorAll('.tab')];
+ function openOffice(key,push){
+   if(!routes[key]) key='bogota';
+   frame.src=routes[key];
+   tabs.forEach(b=>b.classList.toggle('active',b.dataset.office===key));
+   if(push) history.replaceState(null,'','#'+key);
+   document.title='JAS Workspace | '+({bogota:'Bogotá 101',medellin:'Medellín',aeropuerto:'Aeropuerto'}[key]);
+ }
+ tabs.forEach(b=>b.addEventListener('click',()=>openOffice(b.dataset.office,true)));
+ openOffice(location.hash.slice(1)||'bogota',false);
+ window.addEventListener('hashchange',()=>openOffice(location.hash.slice(1),false));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,786 @@
+<!--
+  JAS Forwarding – Reserva de puestos de juntas (Bogotá) – v10
+  Pegar TODO este contenido en el archivo *.webpage.copy.html de la página en Power Pages.
+  CSS y JS van dentro de raw/endraw para que Liquid no los procese.
+  v7: SSC = puestos 53–76 · lectura por clave (corrige reservas que no se veían) · actualización inmediata del plano
+      · calendario + Buscar en la barra superior · botón Verificar disponibilidad.
+-->
+<div id="jas-reservas" data-userid="{{ user.id }}" data-usuario="{{ user.fullname }}" data-correo="{{ user.emailaddress1 }}" data-roles="{{ user.roles | join: ',' }}">
+  <header class="jr-header">
+    <div class="jr-brand">
+      <img class="jr-logo" alt="JAS · People make the difference" src="data:image/png;base64,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">
+      <div>
+        <h1>Reserva de puestos y salas</h1>
+        <p class="jr-sub">JAS Colombia · Aeropuerto · 4 puestos reservables</p>
+      </div>
+    </div>
+    <div class="jr-hder">
+      <span id="jr-modo" class="jr-modo"></span>
+      <span id="jr-quien" class="jr-quien"></span>
+      <div id="jr-cupo" class="jr-cupo" hidden>
+        <button type="button" id="jr-cupo-btn" class="jr-cupo-btn" aria-haspopup="true" aria-expanded="false"></button>
+        <div id="jr-cupo-pop" class="jr-cupo-pop" role="dialog" aria-label="Mis reservas"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="jr-sede">
+    <label for="jr-sede-sel">Oficina:</label>
+    <select id="jr-sede-sel" onchange="if(this.value)window.location.href=this.value">
+      <option value="/">Bogotá 101</option>
+      <option value="/Reservas-JAS-Aeropuerto/" selected>Aeropuerto</option>
+      <option value="/Reservas-JAS-Medellin/">Medellín</option>
+    </select>
+  </div>
+
+  <section class="jr-toolbar">
+    <label class="jr-field jr-grow"><span>Buscar persona o puesto</span><input type="search" id="jr-buscar" placeholder="Ej.: Luis, 1, 2, 3 o 4"></label>
+    <label class="jr-field"><span>Fecha</span><input type="date" id="jr-fecha"></label>
+    <button type="button" class="jr-btn jr-btn-primary" id="jr-ir-fecha">Buscar</button>
+    <button type="button" class="jr-btn jr-btn-light jr-verificar" id="jr-verificar">↻ Verificar disponibilidad · <span id="jr-fecha-txt"></span></button>
+  </section>
+
+  <div id="jr-diag" class="jr-diag" hidden></div>
+
+  <section class="jr-stats">
+    <div><strong id="jr-libres">0</strong><span>Puestos libres</span></div>
+    <div><strong id="jr-ocupados">0</strong><span>Puestos reservados</span></div>
+    <div><strong id="jr-no-reservables">4</strong><span>No reservables</span></div>
+    <div class="jr-legend">
+      <span><i class="jr-dot libre"></i>Libre</span>
+      <span><i class="jr-dot ocupado"></i>Reservado</span>
+      <span><i class="jr-dot liberar"></i>No disponible</span>
+    </div>
+  </section>
+
+  <p id="jr-aviso" class="jr-aviso" hidden></p>
+
+  <h2 class="jr-h2">Plano de la oficina</h2>
+  <div class="jr-mapa-wrap">
+    <div id="jr-mapa" class="jr-mapa"><img id="jr-img" alt="Plano de la oficina JAS Aeropuerto" draggable="false"></div>
+  </div>
+
+  <h2 class="jr-h2">Reservas del día</h2>
+  <div id="jr-lista" class="jr-lista"></div>
+
+  <p class="jr-footer">Última actualización: <span id="jr-actualizado">—</span> · Se actualiza automáticamente cada 30 segundos.</p>
+
+  <div id="jr-modal" class="jr-modal" hidden>
+    <div class="jr-modal-box" role="dialog" aria-modal="true" aria-labelledby="jr-modal-titulo">
+      <button type="button" class="jr-close" id="jr-cerrar" aria-label="Cerrar">×</button>
+      <h3 id="jr-modal-titulo">Puesto</h3>
+      <label class="jr-field"><span>Fecha</span><input type="date" id="jr-m-fecha"></label>
+      <p id="jr-modal-fecha" class="jr-sub"></p>
+      <p id="jr-modal-estado" class="jr-estado"></p>
+      <div id="jr-horas-wrap" hidden>
+        <span class="jr-horas-tit">Seleccione una o varias horas (8:00 a. m. – 6:00 p. m.)</span>
+        <div id="jr-horas" class="jr-horas"></div>
+      </div>
+      <label class="jr-field" id="jr-nombre-wrap"><span>Nombre de quien reserva</span><input type="text" id="jr-nombre" maxlength="100" placeholder="Nombre y apellido" autocomplete="off"></label>
+      <div class="jr-modal-actions">
+        <button type="button" class="jr-btn jr-btn-danger" id="jr-liberar">Liberar</button>
+        <button type="button" class="jr-btn jr-btn-primary" id="jr-aplicar">Reservar</button>
+      </div>
+    </div>
+  </div>
+  <div id="jr-toast" class="jr-toast" hidden></div>
+</div>
+
+<!-- {% raw %} -->
+<style>
+#jas-reservas{--az:#0b2d5b;--az2:#1d4f91;--verde:#1f9d55;--rojo:#c0392b;--ambar:#e08e0b;--gris:#f3f5f8;--borde:#d9dee7;font-family:"Segoe UI",Roboto,Arial,sans-serif;color:#1f2733;max-width:1280px;margin:0 auto;padding:16px;box-sizing:border-box}
+#jas-reservas *{box-sizing:border-box}
+#jas-reservas .jr-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:var(--az);color:#fff;padding:18px 22px;border-radius:12px}
+#jas-reservas h1{margin:0;font-size:1.5rem;color:#fff}
+/* Encabezado JAS Workspace: logo JAS blanco + slogan */
+#jas-reservas .jr-brand{display:flex;flex-direction:column;gap:10px}
+#jas-reservas .jr-logo{height:44px;width:auto;display:block;max-width:100%}
+#jas-reservas .jr-brand h1{font-size:1.7rem;letter-spacing:.3px}
+#jas-reservas .jr-brand h1 small{display:block;font-size:.95rem;font-weight:400;color:#c9d6ea;margin-top:2px;letter-spacing:0}
+@media (max-width:640px){#jas-reservas .jr-logo{height:32px}}
+#jas-reservas .jr-header .jr-sub{color:#c9d6ea;margin:4px 0 0}
+#jas-reservas .jr-sub{color:#5d6b80;margin:2px 0 0;font-size:.9rem}
+#jas-reservas .jr-hder{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+#jas-reservas .jr-modo{font-size:.75rem;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.18);white-space:nowrap}
+#jas-reservas .jr-modo.ok{background:#1f9d55}
+#jas-reservas .jr-modo.err{background:#c0392b}
+#jas-reservas .jr-quien{font-size:.75rem;color:#c9d6ea}
+#jas-reservas .jr-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin:16px 0;padding:14px;background:var(--gris);border-radius:12px}
+#jas-reservas .jr-field{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:#5d6b80}
+#jas-reservas .jr-field input{padding:9px 10px;border:1px solid var(--borde);border-radius:8px;font-size:.95rem;min-width:170px;background:#fff}
+#jas-reservas .jr-grow{flex:1}
+#jas-reservas .jr-grow input{width:100%}
+#jas-reservas .jr-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}
+#jas-reservas .jr-btn{border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:.9rem;text-decoration:none;display:inline-block}
+#jas-reservas .jr-btn:disabled{opacity:.45;cursor:not-allowed}
+#jas-reservas .jr-btn-primary{background:var(--az2);color:#fff}
+#jas-reservas .jr-btn-light{background:#fff;color:var(--az);border:1px solid var(--borde)}
+#jas-reservas .jr-btn-danger{background:var(--rojo);color:#fff}
+#jas-reservas .jr-badge{font-size:.8rem;background:#fff;border:1px solid var(--borde);padding:6px 10px;border-radius:20px}
+#jas-reservas .jr-badge.on{background:#fff4e0;border-color:var(--ambar);color:#8a5600;font-weight:600}
+#jas-reservas .jr-diag{background:#fdecea;border:1px solid var(--rojo);border-radius:10px;padding:12px 14px;margin:0 0 14px;font-size:.88rem}
+#jas-reservas .jr-diag code{background:#fff;padding:1px 5px;border-radius:4px;word-break:break-all}
+#jas-reservas .jr-diag ul{margin:6px 0 0 18px;padding:0}
+#jas-reservas .jr-stats{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin-bottom:8px}
+#jas-reservas .jr-stats>div{display:flex;flex-direction:column}
+#jas-reservas .jr-stats strong{font-size:1.4rem;color:var(--az)}
+#jas-reservas .jr-stats span{font-size:.8rem;color:#5d6b80}
+#jas-reservas .jr-legend{flex-direction:row!important;gap:14px;margin-left:auto;flex-wrap:wrap}
+#jas-reservas .jr-legend span{display:flex;align-items:center;gap:6px}
+#jas-reservas .jr-dot{width:12px;height:12px;border-radius:3px;display:inline-block}
+#jas-reservas .jr-dot.libre{background:#e8f6ee;border:1px solid var(--verde)}
+#jas-reservas .jr-dot.ocupado{background:#fdecea;border:1px solid var(--rojo)}
+#jas-reservas .jr-dot.pendiente{background:#fff4e0;border:1px dashed var(--ambar)}
+#jas-reservas .jr-dot.liberar{background:#e5e7eb;border:1px solid #6b7280}
+#jas-reservas .jr-h2{font-size:1.05rem;color:var(--az);margin:18px 0 8px}
+#jas-reservas .jr-mapa-wrap{overflow-x:auto;border:1px solid var(--borde);border-radius:12px;background:#fff}
+#jas-reservas .jr-mapa{position:relative;min-width:900px;width:100%;line-height:0}
+#jas-reservas .jr-mapa img{width:100%;height:auto;display:block;user-select:none}
+#jas-reservas .jr-tile{position:absolute;transform:translate(-50%,-50%);border-radius:5px;padding:0 2px;cursor:pointer;border:1px solid var(--verde);background:#e8f6ee;font:inherit;color:#1f2733;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;text-align:center;opacity:.93;box-shadow:0 1px 3px rgba(0,0,0,.25);overflow:hidden}
+#jas-reservas .jr-tile:hover{transform:translate(-50%,-50%) scale(1.12);z-index:5;opacity:1}
+#jas-reservas .jr-tile .jr-t-id{font-weight:700;font-size:.8em}
+#jas-reservas .jr-tile .jr-t-nom{font-size:.55em;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#jas-reservas .jr-tile.salaPin .jr-t-id{font-size:.85em}
+#jas-reservas .jr-tile.salaPin .jr-t-nom{font-size:.7em}
+#jas-reservas .jr-tile.ocupado{background:#fdecea;border-color:var(--rojo)}
+#jas-reservas .jr-tile.pendiente{background:#fff4e0;border:2px dashed var(--ambar)}
+#jas-reservas .jr-tile.liberar{background:#f0f0f0;border:2px dashed #888;text-decoration:line-through}
+#jas-reservas .jr-tile.atenuado{opacity:.15}
+#jas-reservas .jr-tile.soloLectura{cursor:default}
+#jas-reservas .jr-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px;font-size:.88rem}
+#jas-reservas .jr-lista div{background:var(--gris);border-radius:8px;padding:7px 10px;display:flex;justify-content:space-between;gap:8px}
+#jas-reservas .jr-lista b{color:var(--az)}
+#jas-reservas .jr-aviso{background:#fff4e0;border-left:4px solid var(--ambar);padding:10px 12px;border-radius:6px;font-size:.9rem}
+#jas-reservas .jr-footer{font-size:.8rem;color:#5d6b80;margin-top:18px}
+#jas-reservas .jr-modal{position:fixed;inset:0;background:rgba(10,20,40,.45);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}
+#jas-reservas .jr-modal[hidden],#jas-reservas .jr-toast[hidden],#jas-reservas .jr-aviso[hidden],#jas-reservas .jr-diag[hidden]{display:none}
+#jas-reservas .jr-modal-box{background:#fff;border-radius:14px;padding:22px;width:100%;max-width:420px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+#jas-reservas .jr-modal-box h3{margin:0;color:var(--az)}
+#jas-reservas .jr-modal-box .jr-field input{width:100%}
+#jas-reservas .jr-close{position:absolute;top:8px;right:12px;border:0;background:none;font-size:1.6rem;cursor:pointer;color:#5d6b80}
+#jas-reservas .jr-estado{margin:12px 0;font-size:.92rem}
+#jas-reservas .jr-modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+#jas-reservas .jr-hint{font-size:.75rem;color:#5d6b80;margin:10px 0 0}
+#jas-reservas .jr-toast{position:fixed;bottom:20px;right:20px;background:var(--az);color:#fff;padding:12px 16px;border-radius:10px;z-index:10000;max-width:460px;box-shadow:0 6px 20px rgba(0,0,0,.25);font-size:.9rem;white-space:pre-line}
+#jas-reservas .jr-toast.error{background:var(--rojo)}
+@media (max-width:640px){#jas-reservas .jr-actions{margin-left:0;width:100%}#jas-reservas .jr-legend{margin-left:0}}
+#jas-reservas [hidden]{display:none!important}
+#jas-reservas .jr-toolbar{flex-wrap:wrap;align-items:flex-end}
+#jas-reservas .jr-verificar{flex-basis:100%;width:100%;justify-content:center;text-align:center}
+#jas-reservas .jr-modal-box{max-height:92vh;overflow-y:auto}
+#jas-reservas .jr-modal-box .jr-field{margin-top:10px}
+#jas-reservas .jr-horas-tit{display:block;font-size:.8rem;color:#5d6b80;margin-top:4px}
+#jas-reservas .jr-horas{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:6px 0 4px}
+#jas-reservas .jr-hora{border:1px solid var(--verde);background:#e8f6ee;border-radius:8px;padding:6px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;font:inherit;font-size:.82rem;text-align:left;color:#1f2733}
+#jas-reservas .jr-hora span{font-size:.72rem;color:#5d6b80;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#jas-reservas .jr-hora.ocupada{border-color:var(--rojo);background:#fdecea}
+#jas-reservas .jr-hora.ocupada span{color:var(--rojo);font-weight:600}
+#jas-reservas .jr-hora.sel{outline:3px solid var(--az2);outline-offset:-2px}
+#jas-reservas .jr-hora:disabled{cursor:default;opacity:.7}
+#jas-reservas .jr-bloq{color:var(--rojo);font-weight:600}
+#jas-reservas .jr-tile.ocupado .jr-t-nom{color:var(--rojo);font-weight:700}
+
+  #jas-reservas .jr-tile{border-width:2px;border-radius:7px}
+  #jas-reservas .jr-tile .jr-t-id{font-size:1.3em;font-weight:800}
+  #jas-reservas .jr-tile .jr-t-nom{font-size:.78em;margin-top:2px}
+  #jas-reservas .jr-tile.no-reservable{background:#e5e7eb!important;border:2px solid #6b7280!important;color:#374151!important;cursor:not-allowed!important;opacity:.96}
+  #jas-reservas .jr-tile.no-reservable .jr-t-nom{color:#4b5563!important;font-weight:700}
+  #jas-reservas .jr-tile.ocupado-fijo{background:#fdecea!important;border:2px solid var(--rojo)!important;color:#1f2733!important;cursor:not-allowed!important;opacity:.96}
+  #jas-reservas .jr-tile.ocupado-fijo .jr-t-nom{color:var(--rojo)!important;font-weight:700}
+  #jas-reservas .jr-tile:disabled:hover{transform:translate(-50%,-50%)}
+
+#jas-reservas .jr-sede{display:flex;align-items:center;gap:10px;margin:12px 0 0;padding:10px 14px;background:#fff;border:1px solid var(--borde);border-radius:10px}
+#jas-reservas .jr-sede label{font-weight:700;color:var(--az);font-size:.9rem}
+#jas-reservas .jr-sede select{padding:8px 12px;border:1px solid var(--borde);border-radius:8px;font-size:.95rem;font-weight:600;color:var(--az);background:#fff;min-width:220px;cursor:pointer}
+#jas-reservas .jr-sede select:focus{outline:2px solid #9ec5e8}
+
+#jas-reservas .jr-header{position:relative;overflow:visible}
+#jas-reservas .jr-cupo{position:relative}
+#jas-reservas .jr-cupo-btn{font:inherit;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.14);color:#fff;cursor:pointer;white-space:nowrap}
+#jas-reservas .jr-cupo-btn:hover,#jas-reservas .jr-cupo.abierto .jr-cupo-btn{background:rgba(255,255,255,.26)}
+#jas-reservas .jr-cupo-btn.alerta{background:#e08e0b;border-color:#e08e0b}
+#jas-reservas .jr-cupo-btn.lleno{background:#c0392b;border-color:#c0392b}
+#jas-reservas .jr-cupo-pop{display:none;position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:290px;background:#fff;color:#1f2733;border:1px solid var(--borde);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22);padding:12px 14px;text-align:left}
+#jas-reservas .jr-cupo-pop:before{content:"";position:absolute;right:22px;top:-7px;width:12px;height:12px;background:#fff;border-left:1px solid var(--borde);border-top:1px solid var(--borde);transform:rotate(45deg)}
+#jas-reservas .jr-cupo:hover .jr-cupo-pop,#jas-reservas .jr-cupo.abierto .jr-cupo-pop{display:block}
+#jas-reservas .jr-cupo-pop h4{margin:0 0 2px;font-size:.9rem;color:var(--az)}
+#jas-reservas .jr-cupo-pop .jr-cupo-sub{margin:0 0 8px;font-size:.75rem;color:#667085}
+#jas-reservas .jr-cupo-pop ul{list-style:none;margin:0;padding:0;max-height:240px;overflow-y:auto}
+#jas-reservas .jr-cupo-pop li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid #eef1f5;font-size:.8rem}
+#jas-reservas .jr-cupo-pop li b{color:var(--az)}
+#jas-reservas .jr-cupo-pop li span{color:#475467;text-align:right}
+#jas-reservas .jr-cupo-pop .jr-cupo-vacio{font-size:.8rem;color:#667085;padding:6px 0}
+#jas-reservas .jr-cupo-pop .jr-cupo-pie{margin-top:8px;padding-top:8px;border-top:1px solid #eef1f5;font-size:.75rem;font-weight:700;color:var(--verde)}
+#jas-reservas .jr-cupo-pop .jr-cupo-pie.lleno{color:var(--rojo)}
+#jas-reservas .jr-sede{display:none!important}
+</style>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ===================== CONFIGURACIÓN ===================== */
+  var CONFIG = {
+    entitySet: "crca6_reservapuestoses",  // EntitySetName (confírmelo)
+    idField:   "crca6_reservapuestosid",
+    fClave:    "crca6_cr_name",
+    fPuesto:   "crca6_puesto",
+    fFecha:    "crca6_fecha",
+    fNombre:   "crca6_nombre",
+    fTipo:     "crca6_tipo",
+    fUsuario:  "crca6_usuarioid",         // Columna (texto, 100): ID de la cuenta que creó la reserva
+    // ID de inquilino (Tenant ID) de Microsoft Entra de JAS -> inicio de sesión automático.
+    tenantId:  "PEGUE-AQUI-EL-TENANT-ID",
+    totalPuestos: 8,
+    salas: [],
+    imagen: "",                 // o "/Plano-Interactivo.png" si lo sube como Archivo web
+    imagenAncho: 1729, imagenAlto: 910,
+    refrescoSeg: 30,
+    permitirFechasPasadas: false,
+
+    // 1. Reserva de salas por horas: 8:00 a. m. a 6:00 p. m. (bloques de 1 hora)
+    horaInicio: 8,
+    horaFin: 18,
+
+    // 2. Administradores del sitio: pueden modificar/liberar reservas de otras cuentas (puestos 1–76)
+    // SOLO estas cuentas son administradoras (el rol web de Power Pages ya no da permisos de administrador)
+    admins: [
+      "luis.olaya@jas.com",
+      "andres.popayan@jas.com",
+      "alexander.bernal@jas.com"
+    ],
+
+    // 3. Puestos exclusivos JAS SSC (53 a 76): solo estas cuentas pueden reservarlos
+    sscDesde: 999,
+    sscHasta: 999,
+    // 4–5. Puestos fijos: siempre aparecen reservados y nadie puede reservarlos
+    puestosFijos: { 5: "Ocupado", 6: "Siacomex", 7: "Siacomex", 8: "Siacomex" },
+    // Límites por usuario (solo puestos; las salas no tienen límite)
+    maxDiasMes: 10,              // máximo de reservas de puesto entre el mes actual y el siguiente (sumando ambas oficinas)
+    limitesParaAdmins: false,    // false = los administradores no tienen límite diario ni mensual
+    personalSSC: []
+  };
+  /* ========================================================= */
+
+  var PLANO_B64 = "../assets/plano-aeropuerto.png";
+
+  var DEMO = true; // GitHub Pages: almacenamiento local temporal hasta conectar Supabase
+  var DEMO_KEY = "jasReservasDemo";
+
+  var COORD = {}, W = 5.6, H = 11.0;
+  // Tamaño especial para los puestos contra el muro superior (7 y 8)
+  var TAM = { P07: [6.5, 8.5], P08: [6.5, 8.5] };
+  // Plano Aeropuerto 1729 x 910. Coordenadas = centro del botón.
+  // Isla derecha: 1 (arriba), 2 (abajo). Isla izquierda: 3 y 4 (lado derecho), 5 y 6 (lado izquierdo). Muro superior: 7 y 8.
+  COORD["P01"] = [779, 470];
+  COORD["P02"] = [779, 659];
+  COORD["P03"] = [449, 477];
+  COORD["P04"] = [442, 644];
+  COORD["P05"] = [322, 651];
+  COORD["P06"] = [326, 473];
+  COORD["P07"] = [208, 130];
+  COORD["P08"] = [417, 133];
+
+  var ESPACIOS = [];
+  for (var i = 1; i <= CONFIG.totalPuestos; i++) ESPACIOS.push({ id: "P" + String(i).padStart(2, "0"), label: "Puesto " + i, tipo: "Puesto" });
+  var MAPA = {};
+  ESPACIOS.forEach(function (e) { MAPA[e.id] = e; });
+
+  var estado = { fecha: hoyISO(), server: { puestos: {}, salas: {} }, actual: null, guardando: false, horasSel: {}, locales: {}, borrados: {} };
+  var $ = function (id) { return document.getElementById(id); };
+  var root = $("jas-reservas");
+  function attr(n) { var v = (root.getAttribute(n) || "").trim(); return v.indexOf("{" + "{") > -1 ? "" : v; }
+  function lista(a) { return (a || []).map(function (x) { return String(x).trim().toLowerCase(); }).filter(Boolean); }
+  var userId = attr("data-userid") || (DEMO ? "DEMO" : "");
+  var usuarioActual = attr("data-usuario") || attr("data-correo");
+  var correoActual = attr("data-correo").toLowerCase();
+  var rolesActual = lista(attr("data-roles").split(","));
+  var conSesion = !!attr("data-userid");
+  var esAdmin = !!correoActual && lista(CONFIG.admins).indexOf(correoActual) > -1;
+  var HORAS = [];
+  for (var hx = CONFIG.horaInicio; hx < CONFIG.horaFin; hx++) HORAS.push(hx);
+  var MSG_SSC = "Estos puestos de trabajo son para el uso de JAS SSC y no está permitido reservar en estos puestos. Solo podrá reservar del puesto 1 al " + (CONFIG.sscDesde - 1) + ".";
+
+  function hoyISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function esc(t) { return String(t == null ? "" : t).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function fechaLarga(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString("es-CO", { weekday: "long", year: "numeric", month: "long", day: "numeric" }); }
+  function esPasada() { return !CONFIG.permitirFechasPasadas && estado.fecha < hoyISO(); }
+  function modo(txt, cls) { var m = $("jr-modo"); m.textContent = txt; m.className = "jr-modo" + (cls ? " " + cls : ""); }
+  var toastTimer;
+  function toast(msg, error) { var t = $("jr-toast"); t.textContent = msg; t.className = "jr-toast" + (error ? " error" : ""); t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, error ? 9000 : 3500); }
+
+  function urlLogin() {
+    var ret = location.pathname + location.search;
+    return /^[0-9a-f-]{36}$/i.test(CONFIG.tenantId)
+      ? "/Account/Login/ExternalLogin?provider=" + encodeURIComponent("https://login.windows.net/" + CONFIG.tenantId + "/") + "&ReturnUrl=" + encodeURIComponent(ret)
+      : "/SignIn?returnUrl=" + encodeURIComponent(ret);
+  }
+
+  /* ---------- Diagnóstico persistente en pantalla ---------- */
+  function diag(e, url) {
+    var st = e && e.status, pasos;
+    if (st === 401) pasos = ["La sesión no llegó a la Web API. Cierre sesión, vuelva a entrar y recargue con Ctrl+F5."];
+    else if (st === 403) pasos = ["Falta el <b>permiso de tabla</b> sobre <b>Reserva Puesto</b> para el rol <b>Usuarios autenticados</b> (Leer/Crear/Escribir/Eliminar, acceso Global).",
+                                  "Confirme que su contacto tenga el rol Usuarios autenticados.",
+                                  "Después de cambiar permisos: <b>Sincronizar</b> en Power Pages y Ctrl+F5."];
+    else if (st === 404) pasos = ["El nombre del conjunto de entidades no es <code>" + esc(CONFIG.entitySet) + "</code>. Confirme el <b>EntitySetName</b> y cámbielo en CONFIG.entitySet.",
+                                  "O falta <code>Webapi/crca6_reservapuestos/enabled = true</code> con el Sitio web asignado."];
+    else if (st === 400) pasos = ["Revise <code>Webapi/crca6_reservapuestos/fields</code>: debe contener exactamente <code>" + esc([CONFIG.fClave, CONFIG.fPuesto, CONFIG.fFecha, CONFIG.fNombre, CONFIG.fTipo, CONFIG.fUsuario].filter(Boolean).join(",")) + "</code>.",
+                                  "Verifique que esos nombres lógicos existan en la tabla."];
+    else pasos = ["Error no esperado. Presione F12 → pestaña Red y revise la llamada a <code>/_api/</code>."];
+    var d = $("jr-diag");
+    d.innerHTML = "<b>No fue posible conectar con Dataverse</b> – " + esc(e && e.message || "error") +
+      (url ? "<br>Llamada: <code>" + esc(url) + "</code>" : "") +
+      "<br>Usuario detectado: <code>" + esc(usuarioActual || "(sin nombre)") + "</code> · Id: <code>" + esc(userId || "(sin sesión)") + "</code>" +
+      "<ul><li>" + pasos.join("</li><li>") + "</li></ul>";
+    d.hidden = false;
+  }
+
+  /* ---------- Datos: Power Pages Web API / Demo ---------- */
+  function getToken() {
+    if (window.shell && typeof window.shell.getTokenDeferred === "function") {
+      return new Promise(function (res, rej) { window.shell.getTokenDeferred().done(res).fail(function () { rej(new Error("No se pudo obtener el token de seguridad.")); }); });
+    }
+    return fetch("/_layout/tokenhtml?_=" + Date.now(), { credentials: "same-origin", cache: "no-store" })
+      .then(function (r) { return r.text(); })
+      .then(function (html) { var m = html.match(/value="([^"]+)"/); if (!m) throw new Error("No se pudo obtener el token de seguridad."); return m[1]; });
+  }
+  var ultimaUrl = "";
+  function api(method, url, body) {
+    ultimaUrl = method + " " + url;
+    return getToken().then(function (token) {
+      return fetch(url, { method: method, credentials: "same-origin", cache: "no-store",
+        headers: { "__RequestVerificationToken": token, "Content-Type": "application/json", "Accept": "application/json", "X-Requested-With": "XMLHttpRequest", "Cache-Control": "no-cache" },
+        body: body ? JSON.stringify(body) : undefined });
+    }).then(function (r) {
+      if (r.ok) return r.status === 204 ? null : r.json().catch(function () { return null; });
+      return r.text().then(function (t) {
+        var msg = r.statusText; try { var j = JSON.parse(t); msg = (j.error && j.error.message) || msg; } catch (x) { if (t) msg = t.slice(0, 200); }
+        var e = new Error("HTTP " + r.status + " – " + msg); e.status = r.status; throw e;
+      });
+    });
+  }
+  function demoDB() { try { return JSON.parse(localStorage.getItem(DEMO_KEY)) || {}; } catch (e) { return {}; } }
+  function demoSave(db) { localStorage.setItem(DEMO_KEY, JSON.stringify(db)); }
+
+  /* ---------- Reglas ---------- */
+  function hh(h) { return String(h).padStart(2, "0") + ":00"; }
+  function rango(h) { return hh(h) + " – " + hh(h + 1); }
+  function numPuesto(id) { return /^P\d+$/.test(id) ? parseInt(id.slice(1), 10) : 0; }
+  function esSSC(id) { var n = numPuesto(id); return n >= CONFIG.sscDesde && n <= CONFIG.sscHasta; }
+  function enListaSSC() { return !!correoActual && lista(CONFIG.personalSSC).indexOf(correoActual) > -1; }
+  function esPropia(r) { if (!r) return false; if (r.usuario) return r.usuario === userId; return !!usuarioActual && r.nombre === usuarioActual; }
+  function puedeModificar(r) { return esAdmin || esPropia(r); }
+  function secuencia(items, fn) { return items.reduce(function (p, x) { return p.then(function () { return fn(x); }); }, Promise.resolve()); }
+  function claveDe(puesto, fecha, hora) { return "AER-" + puesto + "_" + fecha + (hora == null ? "" : "_" + String(hora).padStart(2, "0")); }
+  var VIGENCIA_LOCAL = 120000;   // 2 min: lo recién guardado se muestra aunque la lectura aún no lo traiga
+  /* ---------- v8: reglas adicionales ---------- */
+  var MSG_SSC_2 = "Su cuenta pertenece a JAS SSC: solo puede reservar del puesto " + CONFIG.sscDesde + " al " + CONFIG.sscHasta + ".";
+  function puestoFijo(id) {
+    return CONFIG.puestosFijos[numPuesto(id)] || "";
+  }
+  function motivoBloqueo(id) {
+    var fijo = puestoFijo(id);
+    if (fijo === "Ocupado") return "Este puesto se encuentra ocupado de forma permanente y no está disponible para reservas.";
+    if (fijo === "Siacomex") return "Puesto asignado a Siacomex. Visible únicamente como referencia y no reservable.";
+    if (fijo) return "Este puesto está asignado de forma permanente a " + fijo + ".";
+    if (esSSC(id) && !enListaSSC()) return MSG_SSC;
+    if (!esSSC(id) && enListaSSC()) return MSG_SSC_2;
+    return "";
+  }
+  function normNom(n) { return String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase(); }
+  function aplicaLimites(nombre) { return (esAdmin && !CONFIG.limitesParaAdmins) ? (!nombre || normNom(nombre) === normNom(usuarioActual)) : true; }
+  function miPuestoDelDia(datos, excepto) {
+    var ks = Object.keys(datos.puestos || {});
+    for (var i = 0; i < ks.length; i++) if (ks[i] !== excepto && esPropia(datos.puestos[ks[i]])) return ks[i];
+    return "";
+  }
+  function mesesVentana() { var d = new Date(), s = new Date(d.getFullYear(), d.getMonth() + 1, 1); return [d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"), s.getFullYear() + "-" + String(s.getMonth() + 1).padStart(2, "0")]; }
+  function fechaMaxima() { var d = new Date(), u = new Date(d.getFullYear(), d.getMonth() + 2, 0); return u.getFullYear() + "-" + String(u.getMonth() + 1).padStart(2, "0") + "-" + String(u.getDate()).padStart(2, "0"); }
+  function nombreMes(ym) { var p = ym.split("-"); return new Date(+p[0], +p[1] - 1, 1).toLocaleDateString("es-CO", { month: "long" }); }
+  function msgMax() { var m = mesesVentana(); return "Ha llegado al máximo de " + CONFIG.maxDiasMes + " reservas permitidas entre " + nombreMes(m[0]) + " y " + nombreMes(m[1]) + " (sumando Bogotá 101, Aeropuerto y Medellín)."; }
+  function msgFueraVentana() { var m = mesesVentana(); return "Solo se puede reservar en " + nombreMes(m[0]) + " y " + nombreMes(m[1]) + ". Las fechas posteriores se habilitan al iniciar el siguiente mes."; }
+  // Reservas de puesto del usuario en el mes actual y el siguiente, en ambas oficinas (claves P05_fecha y AER-P05_fecha)
+  function reservasVentana() {
+    var meses = mesesVentana(), dias = {};
+    function sumar(clave, nombre) {
+      var m = /^(?:AER-|MED-)?P\d+_(\d{4}-\d{2}-\d{2})$/.exec(clave || "");
+      if (!m || meses.indexOf(m[1].slice(0, 7)) < 0 || estado.borrados[clave]) return;
+      if (m[1] < hoyISO()) return;   // días ya pasados: se vencen solos, no cuentan ni se muestran (siguen guardados en Dataverse)
+      if (esAdmin && nombre && normNom(nombre) !== normNom(usuarioActual)) return;   // reservas hechas por un administrador para otras personas
+      var pm = /^(AER-|MED-)?P0*(\d+)_/.exec(clave);
+      dias[m[1]] = { fecha: m[1], oficina: pm && pm[1] ? (pm[1] === "MED-" ? "Medellín" : "Aeropuerto") : "Bogotá 101", puesto: pm ? pm[2] : "" };
+    }
+    function fin() { estado.misReservas = Object.keys(dias).sort().map(function (k) { return dias[k]; }); return Object.keys(dias); }
+    Object.keys(estado.locales).forEach(function (k) { var r = estado.locales[k].reg; if (r.usuario === userId) sumar(k, r.nombre); });
+    if (DEMO) { var db = demoDB(); Object.keys(db).forEach(function (k) { if (db[k].usuario === userId) sumar(k, db[k].nombre); }); return Promise.resolve(fin()); }
+    var url = "/_api/" + CONFIG.entitySet + "?$select=" + CONFIG.fClave + "," + CONFIG.fNombre + "&$top=500&$filter=" +
+      encodeURIComponent("(contains(" + CONFIG.fClave + ",'_" + meses[0] + "-') or contains(" + CONFIG.fClave + ",'_" + meses[1] + "-')) and " + CONFIG.fUsuario + " eq '" + userId + "'");
+    return api("GET", url).then(function (j) { (j && j.value || []).forEach(function (r) { sumar(r[CONFIG.fClave], r[CONFIG.fNombre]); }); return fin(); });
+  }
+  /* ---------- Contador "X de 10 reservas" ---------- */
+  function fechaCorta(iso) { var p = iso.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+  function pintarCupo() {
+    var lista = estado.misReservas || [], n = lista.length, max = CONFIG.maxDiasMes, m = mesesVentana();
+    var b = $("jr-cupo-btn"), pop = $("jr-cupo-pop");
+    b.textContent = n + " de " + max + " reservas";
+    b.className = "jr-cupo-btn" + (n >= max ? " lleno" : (n >= max - 2 ? " alerta" : ""));
+    b.title = "Ver mis reservas";
+    var html = "<h4>Mis reservas</h4><p class=\"jr-cupo-sub\">" + esc(nombreMes(m[0])) + " y " + esc(nombreMes(m[1])) + " · Bogotá 101, Aeropuerto y Medellín</p>";
+    if (!n) html += '<div class="jr-cupo-vacio">Aún no tiene reservas de puesto.</div>';
+    else html += "<ul>" + lista.map(function (r) { return "<li><b>" + fechaCorta(r.fecha) + "</b><span>" + esc(r.oficina) + " · Puesto " + esc(r.puesto) + "</span></li>"; }).join("") + "</ul>";
+    var libres = Math.max(0, max - n);
+    html += '<div class="jr-cupo-pie' + (libres ? "" : " lleno") + '">' + (libres ? "Le quedan " + libres + (libres === 1 ? " reserva disponible." : " reservas disponibles.") : "Ya usó todas sus reservas de este periodo.") + "</div>";
+    pop.innerHTML = html;
+    $("jr-cupo").hidden = false;
+  }
+  function actualizarCupo() { if (!userId && !DEMO) return; reservasVentana().then(pintarCupo).catch(function () {}); }
+  /* ---------- Datos ---------- */
+  function agrupar(regs, fecha) {
+    var out = { puestos: {}, salas: {} }, ahora = Date.now(), vistos = {};
+    Object.keys(estado.borrados).forEach(function (k) { if (ahora - estado.borrados[k] > VIGENCIA_LOCAL) delete estado.borrados[k]; });
+    Object.keys(estado.locales).forEach(function (k) { if (ahora - estado.locales[k].t > VIGENCIA_LOCAL) delete estado.locales[k]; });
+    regs = regs.filter(function (r) { return !estado.borrados[r.clave]; });
+    regs.forEach(function (r) { vistos[r.clave] = 1; });
+    Object.keys(estado.locales).forEach(function (k) { var l = estado.locales[k]; if (l.fecha === fecha && !vistos[k]) regs.push(l.reg); });
+    regs.forEach(function (r) {
+      var e = MAPA[r.puesto]; if (!e) return;
+      if (r.clave && r.clave.indexOf("_" + fecha) < 0) return;          // otra fecha
+      var info = { id: r.id, clave: r.clave, nombre: r.nombre, usuario: r.usuario || "" };
+      if (e.tipo === "Sala") {
+        var s = out.salas[r.puesto] || (out.salas[r.puesto] = {}), m = /_(\d{2})$/.exec(r.clave || "");
+        if (m) s[+m[1]] = info;
+        else HORAS.forEach(function (h) { if (!s[h]) s[h] = info; });   // reserva antigua de día completo
+      } else out.puestos[r.puesto] = info;
+    });
+    return out;
+  }
+  function filaDe(r) { var cl = r[CONFIG.fClave] || "", m = /^AER-(P\d+)_/.exec(cl); return { id: r[CONFIG.idField], clave: cl, puesto: m ? m[1] : null, nombre: r[CONFIG.fNombre], usuario: CONFIG.fUsuario ? r[CONFIG.fUsuario] : "" }; }
+  function leer(fecha) {
+    if (DEMO) { var db = demoDB(); return Promise.resolve(agrupar(Object.keys(db).filter(function (k) { return db[k].fecha === fecha; }).map(function (k) { var r = db[k]; return { id: k, clave: k, puesto: r.puesto, nombre: r.nombre, usuario: r.usuario }; }), fecha)); }
+    var campos = [CONFIG.idField, CONFIG.fClave, CONFIG.fPuesto, CONFIG.fNombre];
+    if (CONFIG.fUsuario) campos.push(CONFIG.fUsuario);
+    var base = "/_api/" + CONFIG.entitySet + "?$select=" + campos.join(",") + "&$top=2000&$filter=";
+    // La clave siempre contiene la fecha (P05_2026-10-28 / SALA-1_2026-10-28_09): no depende del formato de la columna Fecha.
+    return api("GET", base + encodeURIComponent("startswith(" + CONFIG.fClave + ",'AER-') and contains(" + CONFIG.fClave + ",'_" + fecha + "')"))
+      .catch(function (e) {
+        if (e && e.status === 400) return api("GET", base + encodeURIComponent(CONFIG.fFecha + " eq " + fecha));
+        throw e;
+      })
+      .then(function (j) { return agrupar((j && j.value || []).map(filaDe), fecha); });
+  }
+  function crear(puesto, fecha, nombre, hora) {
+    var clave = claveDe(puesto, fecha, hora);
+    var marcar = function () { estado.locales[clave] = { t: Date.now(), fecha: fecha, reg: { id: null, clave: clave, puesto: puesto, nombre: nombre, usuario: userId } }; delete estado.borrados[clave]; };
+    if (DEMO) { var db = demoDB(); if (db[clave]) return Promise.reject(Object.assign(new Error("duplicado"), { status: 412 })); db[clave] = { puesto: puesto, fecha: fecha, nombre: nombre, usuario: userId }; demoSave(db); return Promise.resolve(); }
+    var b = {}; b[CONFIG.fClave] = clave; b[CONFIG.fPuesto] = "AER-" + puesto; b[CONFIG.fFecha] = fecha; b[CONFIG.fNombre] = nombre; b[CONFIG.fTipo] = MAPA[puesto].tipo;
+    if (CONFIG.fUsuario) b[CONFIG.fUsuario] = userId;
+    return api("POST", "/_api/" + CONFIG.entitySet, b).then(marcar);
+  }
+  function actualizar(r, nombre) {
+    if (DEMO) { var db = demoDB(); if (db[r.id]) { db[r.id].nombre = nombre; demoSave(db); } return Promise.resolve(); }
+    var b = {}; b[CONFIG.fNombre] = nombre;
+    return api("PATCH", "/_api/" + CONFIG.entitySet + "(" + r.id + ")", b).then(function () { if (estado.locales[r.clave]) estado.locales[r.clave].reg.nombre = nombre; });
+  }
+  function eliminar(r) {
+    if (DEMO) { var db = demoDB(); delete db[r.id]; demoSave(db); return Promise.resolve(); }
+    return api("DELETE", "/_api/" + CONFIG.entitySet + "(" + r.id + ")").then(function () { delete estado.locales[r.clave]; if (r.clave) estado.borrados[r.clave] = Date.now(); });
+  }
+
+  /* ---------- Render ---------- */
+  function cargar() {
+    $("jr-fecha").value = estado.fecha;
+    $("jr-fecha-txt").textContent = fechaLarga(estado.fecha);
+    return leer(estado.fecha).then(function (data) {
+      estado.server = data;
+      $("jr-diag").hidden = true;
+      $("jr-actualizado").textContent = new Date().toLocaleTimeString("es-CO");
+      modo(DEMO ? "MODO DEMO (datos locales)" : "Conectado a Dataverse", DEMO ? "" : "ok");
+      render();
+      actualizarCupo();
+    }).catch(function (e) {
+      modo("Error de conexión", "err");
+      diag(e, ultimaUrl);
+      render();
+    });
+  }
+  function horasSala(id) { var s = estado.server.salas[id] || {}; return HORAS.filter(function (h) { return s[h]; }); }
+  function vista(id) {
+    if (MAPA[id].tipo === "Sala") {
+      var n = horasSala(id).length;
+      return n ? { clase: "ocupado", nombre: n + (n === 1 ? " h reservada" : " h reservadas") } : { clase: "", nombre: "" };
+    }
+    var fijo = puestoFijo(id);
+    if (fijo) return { clase: "ocupado", nombre: fijo };
+    var s = estado.server.puestos[id];
+    return s ? { clase: "ocupado", nombre: s.nombre } : { clase: "", nombre: "" };
+  }
+  function textoBusqueda(e) {
+    var t = e.label + " " + e.id + " " + vista(e.id).nombre;
+    if (e.tipo === "Sala") { var s = estado.server.salas[e.id] || {}; horasSala(e.id).forEach(function (h) { t += " " + s[h].nombre; }); }
+    return t.toLowerCase();
+  }
+  function tileHTML(e) {
+    var v = vista(e.id), c = COORD[e.id], fijo = puestoFijo(e.id), w = (TAM[e.id] || [W, H])[0], h = (TAM[e.id] || [W, H])[1];
+    var pos = "left:" + (c[0] / CONFIG.imagenAncho * 100) + "%;top:" + (c[1] / CONFIG.imagenAlto * 100) + "%;width:" + w + "%;height:" + h + "%";
+    var especial = fijo === "Siacomex" ? " no-reservable" : (fijo === "Ocupado" ? " ocupado-fijo" : "");
+    var cls = "jr-tile " + v.clase + especial + (esPasada() ? " soloLectura" : "");
+    var nombre = fijo === "Siacomex" ? "Siacomex" : (fijo === "Ocupado" ? "Ocupado" : (v.nombre ? esc(v.nombre.split(" ")[0]) : ""));
+    var titulo = fijo === "Siacomex" ? e.label + " · Siacomex · No reservable" : (fijo === "Ocupado" ? e.label + " · Ocupado" : e.label + (v.nombre ? " · " + v.nombre : " · Libre"));
+    return '<button type="button" class="' + cls + '" style="' + pos + '" data-id="' + e.id + '" title="' + esc(titulo) + '"' + (fijo ? ' disabled aria-disabled="true"' : '') + '>' +
+      '<span class="jr-t-id">' + e.id.replace(/^P0?/, "") + '</span>' + (nombre ? '<span class="jr-t-nom">' + nombre + '</span>' : "") + '</button>';
+  }
+  function ajustarFuente() { var m = $("jr-mapa"); m.style.fontSize = (m.clientWidth / CONFIG.imagenAncho * 22) + "px"; }
+  function render() {
+    var mapa = $("jr-mapa");
+    mapa.querySelectorAll(".jr-tile").forEach(function (n) { n.remove(); });
+    mapa.insertAdjacentHTML("beforeend", ESPACIOS.map(tileHTML).join(""));
+    ajustarFuente();
+    var filas = [];
+    ESPACIOS.forEach(function (e) {
+      if (e.tipo === "Sala") {
+        var s = estado.server.salas[e.id] || {};
+        horasSala(e.id).forEach(function (h) { filas.push("<div><b>" + esc(e.label) + " · " + rango(h) + "</b><span>" + esc(s[h].nombre) + "</span></div>"); });
+      } else if (estado.server.puestos[e.id]) {
+        filas.push("<div><b>" + esc(e.label) + "</b><span>" + esc(estado.server.puestos[e.id].nombre) + "</span></div>");
+      }
+    });
+    $("jr-lista").innerHTML = filas.length ? filas.join("") : '<p class="jr-sub">No hay reservas para esta fecha.</p>';
+    var libres = 0, ocup = 0;
+    ESPACIOS.forEach(function (e) { if (numPuesto(e.id) <= 4) { var o = vista(e.id).clase === "ocupado"; o ? ocup++ : libres++; } });
+    $("jr-libres").textContent = libres; $("jr-ocupados").textContent = ocup; $("jr-no-reservables").textContent = 4;
+    var aviso = $("jr-aviso");
+    if (!aviso.dataset.fijo) { if (esPasada()) { aviso.textContent = "Está consultando una fecha pasada: solo lectura."; aviso.hidden = false; } else aviso.hidden = true; }
+    filtrar();
+  }
+  function filtrar() {
+    var q = $("jr-buscar").value.trim().toLowerCase();
+    root.querySelectorAll(".jr-tile").forEach(function (t) {
+      if (!q) { t.classList.remove("atenuado"); return; }
+      t.classList.toggle("atenuado", textoBusqueda(MAPA[t.getAttribute("data-id")]).indexOf(q) < 0);
+    });
+  }
+  function cambiarFecha(v) {
+    if (!v) return Promise.resolve(false);
+    if (!CONFIG.permitirFechasPasadas && v < hoyISO()) { toast("No se pueden consultar ni hacer reservas en fechas pasadas.", true); $("jr-fecha").value = estado.fecha; return Promise.resolve(false); }
+    estado.fecha = v;
+    return cargar().then(function () { return true; });
+  }
+
+  /* ---------- Ventana emergente ---------- */
+  function abrir(id) {
+    if (puestoFijo(id)) return;
+    var e = MAPA[id];
+    estado.actual = id; estado.horasSel = {};
+    $("jr-modal-titulo").textContent = e.label;
+    var f = $("jr-m-fecha"); f.value = estado.fecha; f.min = CONFIG.permitirFechasPasadas ? "" : hoyISO(); if (!esAdmin) f.max = fechaMaxima();
+    $("jr-modal-fecha").textContent = fechaLarga(estado.fecha);
+    if (e.tipo === "Sala") abrirSala(e); else abrirPuesto(e);
+    $("jr-modal").hidden = false;
+  }
+  function abrirPuesto(e) {
+    var fijo = puestoFijo(e.id);
+    var s = fijo ? null : estado.server.puestos[e.id], ro = esPasada(), puedeReservar = !ro, puedeLiberar = false, txt, bloqueo, otro;
+    $("jr-horas-wrap").hidden = true;
+    if (fijo) {
+      txt = 'Reservado de forma permanente por <b class="jr-bloq">' + esc(fijo) + "</b>.";
+      puedeReservar = false;
+    } else if (s) {
+      txt = 'Reservado por <b class="jr-bloq">' + esc(s.nombre) + "</b>.";
+      if (puedeModificar(s)) puedeLiberar = !ro;
+      else { puedeReservar = false; txt += '<br><span class="jr-bloq">Solo la persona que hizo la reserva o un administrador del sitio puede modificarla o cancelarla.</span>'; }
+    } else if ((bloqueo = motivoBloqueo(e.id))) {
+      txt = '<span class="jr-bloq">' + esc(bloqueo) + "</span>";
+      puedeReservar = false;
+    } else if (!esAdmin && estado.fecha > fechaMaxima()) {
+      txt = '<span class="jr-bloq">' + esc(msgFueraVentana()) + "</span>";
+      puedeReservar = false;
+    } else if (!esAdmin && (otro = miPuestoDelDia(estado.server, e.id))) {
+      txt = '<span class="jr-bloq">Ya tiene reservado el ' + esc(MAPA[otro].label) + " para este día. Solo se permite una reserva de puesto por día.</span>";
+      puedeReservar = false;
+    } else txt = "Disponible.";
+    $("jr-modal-estado").innerHTML = txt;
+    var inp = $("jr-nombre");
+    inp.value = s ? s.nombre : usuarioActual;
+    inp.disabled = !puedeReservar;
+    $("jr-nombre-wrap").hidden = !puedeReservar && !s;
+    $("jr-aplicar").hidden = !puedeReservar;
+    $("jr-aplicar").textContent = s ? "Actualizar nombre" : "Reservar";
+    $("jr-liberar").hidden = !puedeLiberar;
+    $("jr-liberar").textContent = "Liberar";
+    if (puedeReservar) setTimeout(function () { inp.focus(); inp.select(); }, 30);
+  }
+  function abrirSala(e) {
+    var res = estado.server.salas[e.id] || {}, ro = esPasada();
+    $("jr-horas-wrap").hidden = false;
+    $("jr-horas").innerHTML = HORAS.map(function (h) {
+      var r = res[h];
+      return '<button type="button" class="jr-hora' + (r ? " ocupada" : "") + '" data-h="' + h + '"' + (ro ? " disabled" : "") + ' title="' + (r ? "Reservada por " + esc(r.nombre) : "Libre") + '">' +
+        "<b>" + rango(h) + "</b><span>" + (r ? "Reservada por " + esc(r.nombre) : "Libre") + "</span></button>";
+    }).join("");
+    $("jr-nombre").value = usuarioActual;
+    $("jr-nombre").disabled = ro;
+    actualizarSala();
+  }
+  function selSala() {
+    var res = estado.server.salas[estado.actual] || {}, libres = [], ocup = [];
+    Object.keys(estado.horasSel).map(Number).sort(function (a, b) { return a - b; }).forEach(function (h) { (res[h] ? ocup : libres).push(h); });
+    return { libres: libres, ocup: ocup };
+  }
+  function actualizarSala() {
+    var ro = esPasada(), s = selSala(), txt;
+    root.querySelectorAll("#jr-horas .jr-hora").forEach(function (b) { b.classList.toggle("sel", !!estado.horasSel[b.getAttribute("data-h")]); });
+    if (ro) txt = "Fecha pasada: solo lectura.";
+    else if (s.libres.length || s.ocup.length) txt = (s.libres.length ? "Por reservar: <b>" + s.libres.map(rango).join(", ") + "</b>. " : "") + (s.ocup.length ? "Por liberar: <b>" + s.ocup.map(rango).join(", ") + "</b>." : "");
+    else txt = "Haga clic en las horas libres para reservarlas (puede elegir varias). Para liberar, seleccione horas ya reservadas.";
+    $("jr-modal-estado").innerHTML = txt;
+    $("jr-nombre-wrap").hidden = ro;
+    $("jr-aplicar").hidden = ro || !s.libres.length;
+    $("jr-aplicar").textContent = "Reservar " + s.libres.length + (s.libres.length === 1 ? " hora" : " horas");
+    $("jr-liberar").hidden = ro || !s.ocup.length;
+    $("jr-liberar").textContent = "Liberar " + s.ocup.length + (s.ocup.length === 1 ? " hora" : " horas");
+  }
+  function cerrar() { $("jr-modal").hidden = true; estado.actual = null; estado.horasSel = {}; }
+  function ocupado(on) {
+    estado.guardando = on;
+    $("jr-aplicar").disabled = on; $("jr-liberar").disabled = on; $("jr-m-fecha").disabled = on;
+    if (on) toast("Guardando…");
+  }
+  function terminar(promesa) {
+    ocupado(true);
+    var id = estado.actual;
+    return promesa.then(function (msg) {
+      ocupado(false); cerrar(); toast(msg);
+      return cargar();
+    }).catch(function (e) {
+      ocupado(false);
+      if (e && e.status && e.status !== 412) diag(e, ultimaUrl);
+      toast(e && e.status === 412 ? "Otra persona lo reservó primero. Se actualizó la información." : (e && e.message || "Error"), true);
+      return cargar().then(function () { if (estado.actual === id && !$("jr-modal").hidden) abrir(id); });
+    });
+  }
+  function aplicar() {
+    if (estado.guardando || esPasada()) return;
+    var id = estado.actual, e = MAPA[id], fecha = estado.fecha, nombre = $("jr-nombre").value.replace(/\s+/g, " ").trim();
+    if (nombre.length < 3) { toast("Escriba el nombre completo (mínimo 3 caracteres).", true); return; }
+    var sufijo = DEMO ? " (modo demo)." : " Ya es visible para todos.";
+    if (e.tipo === "Sala") {
+      var horas = selSala().libres;
+      if (!horas.length) return;
+      terminar(leer(fecha).then(function (act) {
+        var res = act.salas[id] || {}, choques = horas.filter(function (h) { return res[h]; });
+        if (choques.length) throw new Error("Estas horas ya fueron reservadas por otra persona: " + choques.map(rango).join(", ") + ".");
+        return secuencia(horas, function (h) { return crear(id, fecha, nombre, h); })
+          .then(function () { return e.label + ": " + horas.length + (horas.length === 1 ? " hora reservada." : " horas reservadas.") + sufijo; });
+      }));
+      return;
+    }
+    terminar(leer(fecha).then(function (act) {
+      var s = act.puestos[id];
+      if (!s) {
+        var bloqueo = motivoBloqueo(id);
+        if (bloqueo) throw new Error(bloqueo);
+        if (!aplicaLimites(nombre)) return crear(id, fecha, nombre).then(function () { return e.label + " reservado por " + nombre + "." + sufijo; });
+        var otro = miPuestoDelDia(act, id);
+        if (otro) throw new Error("Ya tiene reservado el " + MAPA[otro].label + " para este día. Solo se permite una reserva de puesto por día.");
+        if (fecha > fechaMaxima()) throw new Error(msgFueraVentana());
+          return reservasVentana().then(function (dias) {
+          if (dias.indexOf(fecha) > -1) throw new Error("Ya tiene un puesto reservado para este día en otra oficina. Solo se permite una reserva de puesto por día.");
+          if (dias.length >= CONFIG.maxDiasMes) { var mm = msgMax(); alert(mm); throw new Error(mm); }
+          return crear(id, fecha, nombre).then(function () { return e.label + " reservado por " + nombre + "." + sufijo; });
+        });
+      }
+      if (!puedeModificar(s)) throw new Error(e.label + " ya está reservado por " + s.nombre + ". Solo esa persona o un administrador puede modificarlo.");
+      if (s.nombre === nombre) return e.label + ": sin cambios.";
+      if (!s.id) throw new Error("La reserva se está sincronizando. Intente de nuevo en unos segundos.");
+      return actualizar(s, nombre).then(function () { return e.label + ": reserva actualizada." + sufijo; });
+    }));
+  }
+  function liberar() {
+    if (estado.guardando || esPasada()) return;
+    var id = estado.actual, e = MAPA[id], fecha = estado.fecha;
+    if (e.tipo === "Sala") {
+      var horas = selSala().ocup;
+      if (!horas.length || !confirm("¿Desea liberar " + e.label + " en: " + horas.map(rango).join(", ") + "?")) return;
+      terminar(leer(fecha).then(function (act) {
+        var res = act.salas[id] || {}, regs = [], ids = {};
+        horas.forEach(function (h) { var r = res[h]; if (r && r.id && !ids[r.id]) { ids[r.id] = 1; regs.push(r); } });
+        if (!regs.length) throw new Error("Esas horas ya estaban libres o se están sincronizando. Intente de nuevo en unos segundos.");
+        return secuencia(regs, eliminar).then(function () { return e.label + ": horas liberadas."; });
+      }));
+      return;
+    }
+    if (!confirm("¿Desea liberar " + e.label + " para el " + fechaLarga(fecha) + "?")) return;
+    terminar(leer(fecha).then(function (act) {
+      var s = act.puestos[id];
+      if (!s) throw new Error("La reserva ya no existe.");
+      if (!puedeModificar(s)) throw new Error("Solo la persona que hizo la reserva o un administrador del sitio puede cancelarla.");
+      if (!s.id) throw new Error("La reserva se está sincronizando. Intente de nuevo en unos segundos.");
+      return eliminar(s).then(function () { return e.label + " liberado."; });
+    }));
+  }
+
+  /* ---------- Eventos ---------- */
+  $("jr-img").addEventListener("load", ajustarFuente);
+  $("jr-img").src = CONFIG.imagen || PLANO_B64;
+  window.addEventListener("resize", ajustarFuente);
+  $("jr-buscar").addEventListener("input", filtrar);
+  $("jr-fecha").min = CONFIG.permitirFechasPasadas ? "" : hoyISO();
+  $("jr-ir-fecha").addEventListener("click", function () { cambiarFecha($("jr-fecha").value); });
+  $("jr-fecha").addEventListener("keydown", function (ev) { if (ev.key === "Enter") cambiarFecha(this.value); });
+  $("jr-verificar").addEventListener("click", function () { cargar().then(function () { toast("Disponibilidad actualizada."); }); });
+  root.addEventListener("click", function (ev) { var t = ev.target.closest(".jr-tile"); if (t && root.contains(t)) abrir(t.getAttribute("data-id")); });
+  $("jr-horas").addEventListener("click", function (ev) {
+    var b = ev.target.closest(".jr-hora"); if (!b || b.disabled) return;
+    var h = b.getAttribute("data-h");
+    if (estado.horasSel[h]) delete estado.horasSel[h]; else estado.horasSel[h] = true;
+    actualizarSala();
+  });
+  $("jr-m-fecha").addEventListener("change", function () {
+    var id = estado.actual, inp = this;
+    if (!inp.value || !id) return;
+    cambiarFecha(inp.value).then(function (ok) { if (!ok) inp.value = estado.fecha; else if (estado.actual === id) abrir(id); });
+  });
+  $("jr-cerrar").addEventListener("click", cerrar);
+  $("jr-modal").addEventListener("click", function (ev) { if (ev.target === this) cerrar(); });
+  $("jr-aplicar").addEventListener("click", aplicar);
+  $("jr-liberar").addEventListener("click", liberar);
+  $("jr-nombre").addEventListener("keydown", function (ev) { if (ev.key === "Enter") aplicar(); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !$("jr-modal").hidden) cerrar(); });
+  document.addEventListener("visibilitychange", function () { if (!document.hidden && !estado.guardando && conSesion && $("jr-modal").hidden) cargar(); });
+  /* ---------- Sesión: inicio automático con Microsoft Entra ID ---------- */
+  if (!DEMO && !conSesion) {
+    var intentos = +(sessionStorage.getItem("jrLoginIntentos") || 0), destino = urlLogin();
+    var av = $("jr-aviso"); av.dataset.fijo = "1"; av.hidden = false;
+    if (intentos < 2) {
+      sessionStorage.setItem("jrLoginIntentos", intentos + 1);
+      av.textContent = "Iniciando sesión con su cuenta de JAS (Microsoft Entra ID)…";
+      modo("Iniciando sesión…");
+      location.replace(destino);
+    } else {
+      av.innerHTML = 'No fue posible iniciar sesión automáticamente. <a class="jr-btn jr-btn-primary" href="' + esc(destino) + '">Iniciar sesión con Microsoft Entra ID</a>';
+      modo("Sin sesión", "err");
+    }
+    render();
+    return;
+  }
+  sessionStorage.removeItem("jrLoginIntentos");
+  $("jr-quien").textContent = DEMO ? "" : (usuarioActual || "Usuario autenticado");
+  $("jr-cupo-btn").addEventListener("click", function (ev) { ev.stopPropagation(); var c = $("jr-cupo"), a = !c.classList.contains("abierto"); c.classList.toggle("abierto", a); this.setAttribute("aria-expanded", a); });
+  document.addEventListener("click", function (ev) { var c = $("jr-cupo"); if (c && !c.contains(ev.target)) { c.classList.remove("abierto"); $("jr-cupo-btn").setAttribute("aria-expanded", "false"); } });
+
+  setInterval(function () { if (!estado.guardando && $("jr-modal").hidden) cargar(); }, CONFIG.refrescoSeg * 1000);
+  modo(DEMO ? "MODO DEMO (datos locales)" : "Conectando…");
+  cargar();
+})();
+</script>
+<!-- {% endraw %} -->
+<html xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"><head>
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:_dlc_DocId msdt:dt="string">FZZC36VWXTU7-372520290-1441071</mso:_dlc_DocId>
+<mso:_dlc_DocIdItemGuid msdt:dt="string">8a8640b1-cd1a-4dfb-a1c4-ccbb652de031</mso:_dlc_DocIdItemGuid>
+<mso:_dlc_DocIdUrl msdt:dt="string">https://wwjwm.sharepoint.com/sites/LATAM/Colombia/_layouts/15/DocIdRedir.aspx?ID=FZZC36VWXTU7-372520290-1441071, FZZC36VWXTU7-372520290-1441071</mso:_dlc_DocIdUrl>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
