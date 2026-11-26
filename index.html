@@ -11,13 +11,30 @@ body{display:grid;grid-template-rows:auto 1fr}.shell{background:var(--nav);color
 .top{max-width:1320px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.mark{font-size:1.55rem;font-weight:800;letter-spacing:.04em}.brand small{display:block;color:#b9c9df}.tabs{display:flex;gap:7px;flex-wrap:wrap}.tab{border:1px solid #ffffff55;background:#ffffff12;color:#fff;padding:9px 14px;border-radius:9px;font-weight:700;cursor:pointer}.tab:hover,.tab.active{background:#fff;color:var(--nav)}
 .notice{max-width:1320px;margin:10px auto 0;background:#fff2c7;color:#694c00;border-radius:8px;padding:8px 11px;font-size:.82rem}.stage{min-height:0;padding:12px}iframe{display:block;width:100%;height:100%;min-height:760px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 25px #0b2d5b12}
 @media(max-width:650px){.shell{padding:12px}.top{align-items:flex-start}.tabs{width:100%}.tab{flex:1;padding:9px 7px}.stage{padding:6px}iframe{border-radius:9px;min-height:700px}}
+
+.authGate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#061f42,#0d427f)}.authGate.hidden{display:none}.authCard{width:min(440px,100%);background:#fff;border-radius:16px;padding:30px;box-shadow:0 24px 70px #0005}.authBrand{display:flex;align-items:center;gap:12px;color:#082b59}.authMark{font-size:28px;font-weight:900;font-style:italic}.authBrand small{display:block;color:#74849a;margin-top:2px}.authCard h1{margin:28px 0 6px;font-size:27px;color:#082b59}.authLead{margin:0 0 22px;color:#66758a;font-size:14px}.authField{margin:13px 0}.authField.hidden{display:none}.authField label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#34445b}.authField input{width:100%;height:44px;border:1px solid #c9d3df;border-radius:8px;padding:0 12px;font-size:14px}.authPrimary{width:100%;height:44px;border:0;border-radius:8px;background:#082b59;color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}.authPrimary:disabled{opacity:.6;cursor:wait}.authActions{display:flex;justify-content:space-between;gap:12px;margin-top:16px}.authActions button{border:0;background:none;color:#145fa8;font-weight:600;font-size:12px;cursor:pointer}.authMessage{min-height:18px;margin:10px 0 0;font-size:12px;line-height:1.4}.authMessage.error{color:#b42318}.authMessage.ok{color:#067647}.userBox{display:flex;align-items:center;gap:8px}.logoutBtn{border:1px solid #ffffff55;background:#ffffff12;color:white;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:650}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+<div id="authGate" class="authGate">
+ <div class="authCard">
+  <div class="authBrand"><div class="authMark">JAS</div><div><strong>Booking Colombia</strong><small>Acceso corporativo</small></div></div>
+  <h1 id="authTitle">Iniciar sesión</h1>
+  <p class="authLead" id="authLead">Ingresa con tu correo autorizado y contraseña.</p>
+  <div id="nameRow" class="authField hidden"><label>Nombre</label><input id="authName" autocomplete="name" placeholder="Nombre completo"></div>
+  <div class="authField"><label>Correo</label><input id="authEmail" type="email" autocomplete="email" placeholder="nombre@jas.com"></div>
+  <div class="authField"><label>Contraseña</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Mínimo 8 caracteres"></div>
+  <div id="confirmRow" class="authField hidden"><label>Confirmar contraseña</label><input id="authConfirm" type="password" autocomplete="new-password" placeholder="Repite la contraseña"></div>
+  <div id="authMessage" class="authMessage"></div>
+  <button id="authPrimary" class="authPrimary" type="button">Iniciar sesión</button>
+  <div class="authActions"><button id="toggleSignup" type="button">Crear cuenta</button><button id="forgotPassword" type="button">¿Olvidaste tu contraseña?</button></div>
+ </div>
+</div>
 <header class="shell">
   <div class="top">
     <div class="brand"><div class="mark">JAS</div><div><strong>Workspace Colombia</strong><small>Reserva de puestos, salas y Phonebooks</small></div></div>
-    <nav class="tabs" aria-label="Seleccionar oficina">
+    <div class="userBox"><span id="currentUser" style="font-size:12px"></span><button id="logoutBtn" class="logoutBtn" type="button">Cerrar sesión</button></div><nav class="tabs" aria-label="Seleccionar oficina">
       <button class="tab active" data-office="bogota" type="button">Bogotá 101</button>
       <button class="tab" data-office="medellin" type="button">Medellín</button>
       <button class="tab" data-office="aeropuerto" type="button">Aeropuerto</button>
@@ -42,6 +59,22 @@ body{display:grid;grid-template-rows:auto 1fr}.shell{background:var(--nav);color
  openOffice(location.hash.slice(1)||'bogota',false);
  window.addEventListener('hashchange',()=>openOffice(location.hash.slice(1),false));
 })();
+</script>
+
+<script>
+const SUPABASE_URL='https://vaivheftorfpildxnvow.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_l3j36iY3TrgcfwSxMTJlLQ_A4X8hzop';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let authMode='login';
+const $=id=>document.getElementById(id);
+function message(text,type=''){ $('authMessage').textContent=text; $('authMessage').className='authMessage '+type; }
+function setMode(mode){authMode=mode;const signup=mode==='signup';$('authTitle').textContent=signup?'Crear cuenta':'Iniciar sesión';$('authLead').textContent=signup?'La cuenta debe usar un correo previamente autorizado por JAS Booking.':'Ingresa con tu correo autorizado y contraseña.';$('nameRow').classList.toggle('hidden',!signup);$('confirmRow').classList.toggle('hidden',!signup);$('authPassword').autocomplete=signup?'new-password':'current-password';$('authPrimary').textContent=signup?'Crear cuenta':'Iniciar sesión';$('toggleSignup').textContent=signup?'Ya tengo cuenta':'Crear cuenta';$('forgotPassword').style.display=signup?'none':'inline-block';message('');}
+async function authorizedProfile(email){const {data,error}=await sb.from('profiles').select('id,full_name,email,is_active,is_admin').eq('email',email.toLowerCase()).maybeSingle();return {data,error};}
+async function login(){const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;if(!email||!password)return message('Completa correo y contraseña.','error');$('authPrimary').disabled=true;message('Validando...');const {error}=await sb.auth.signInWithPassword({email,password});$('authPrimary').disabled=false;if(error)return message(error.message,'error');await showApp();}
+async function signup(){const name=$('authName').value.trim(),email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value,confirm=$('authConfirm').value;if(!name||!email||!password||!confirm)return message('Completa todos los campos.','error');if(password!==confirm)return message('Las contraseñas no coinciden.','error');if(password.length<8)return message('La contraseña debe tener mínimo 8 caracteres.','error');$('authPrimary').disabled=true;message('Validando autorización...');const {data:profile,error:profileError}=await authorizedProfile(email);if(profileError||!profile||!profile.is_active){$('authPrimary').disabled=false;return message('Este correo no está autorizado para registrarse. Contacta al administrador de JAS Booking.','error');}const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:'https://sistemabookingjas-hue.github.io/jas-booking/'}});$('authPrimary').disabled=false;if(error)return message(error.message,'error');if(data.user&&data.user.identities&&data.user.identities.length===0)return message('Esta cuenta ya existe. Usa Iniciar sesión o recuperar contraseña.','error');message('Cuenta creada. Revisa tu correo y confirma el registro antes de iniciar sesión.','ok');setMode('login');}
+async function forgot(){const email=$('authEmail').value.trim().toLowerCase();if(!email)return message('Escribe primero tu correo.','error');const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://sistemabookingjas-hue.github.io/jas-booking/'});if(error)return message(error.message,'error');message('Si el correo corresponde a una cuenta válida, recibirás instrucciones para restablecer la contraseña.','ok');}
+async function showApp(){const {data:{session}}=await sb.auth.getSession();if(!session){$('authGate').classList.remove('hidden');return;}const {data:profile}=await sb.from('profiles').select('full_name,email,is_active,is_admin').eq('auth_user_id',session.user.id).maybeSingle();if(!profile||!profile.is_active){await sb.auth.signOut();$('authGate').classList.remove('hidden');return message('Tu acceso todavía no está vinculado a un perfil activo.','error');}$('currentUser').textContent=profile.full_name+(profile.is_admin?' · Administrador':'');$('authGate').classList.add('hidden');}
+$('authPrimary').addEventListener('click',()=>authMode==='signup'?signup():login());$('toggleSignup').addEventListener('click',()=>setMode(authMode==='signup'?'login':'signup'));$('forgotPassword').addEventListener('click',forgot);$('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});sb.auth.onAuthStateChange(()=>showApp());showApp();
 </script>
 </body>
 </html>
